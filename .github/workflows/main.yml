@@ -54,7 +54,7 @@ jobs:
         unit_test_subset_path: 'app/code/aneel/shopfinder/Test/Unit'
         php: 8.1
         composer_version: 2
-        opensearch: 1
+        #opensearch: 1
 
 
     - name: 'launch magento2 static test'
