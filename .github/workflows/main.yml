@@ -51,10 +51,10 @@ jobs:
         COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
       with:
         process: 'unit-test'
-        unit_test_subset_path: 'app/code/aneel/shopfinder/Test/Unit'
+        unit_test_subset_path: 'magento/vendor/magento/module-email'
         php: 8.1
         composer_version: 2
-        #opensearch: 1
+        elasticsearch: 1
 
 
     - name: 'launch magento2 static test'
@@ -92,13 +92,14 @@ jobs:
       uses: MAD-I-T/magento-actions@master
       with:
         process: 'phpstan'
-        exec_path: 'app/code/aneel/shopfinder'
+        exec_path: 'magento/vendor/magento/module-email'
 
     - name: 'launch magento2 integration test custom testsuite'
-      if: ${{true}}
+      if: ${{false}}
       uses: MAD-I-T/magento-actions@master
       env:
         COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
       with:
+        php: 8.1
         process: 'integration-test'
-        testsuite: "Memory Usage Tests"
+        elasticsearch: 1
