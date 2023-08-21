@@ -21,11 +21,6 @@ jobs:
         ports:
           - 9200:9200
         options: -e="discovery.type=single-node" --health-cmd="curl http://localhost:9200/_cluster/health" --health-interval=10s --health-timeout=5s --health-retries=10
-      #opensearch:
-      #  image: opensearchproject/opensearch:1.2.1
-      #  ports:
-      #    - 9200:9200
-      #  options: -e="discovery.type=single-node" -e "plugins.security.disabled=true"  -e "plugins.security.ssl.http.enabled=false" --health-cmd="curl http://localhost:9200/_cluster/health" --health-interval=10s --health-timeout=5s --health-retries=10
 
     steps:
     - uses: actions/checkout@v3
@@ -39,7 +34,7 @@ jobs:
       with:
         process: 'create-project'
         magento_version: 2.4.5
-        #no_push: 1   ## add this arg to not push to the repo ideal for quick test on specific version
+        no_push: 1
 
     - name: 'launch magento2 unit test'
       if: always()
@@ -49,24 +44,14 @@ jobs:
       with:
         process: 'unit-test'
 
-    - name: 'launch magento2 unit test filtered by testsuite'
+    - name: 'launch magento2 unit test specific module'
       if: always()
       uses: MAD-I-T/magento-actions@master
       env:
         COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
       with:
         process: 'unit-test'
-        testsuite: 'Magento_Unit_Tests_Other'
-
-
-    - name: 'launch magento2 unit test specific module i.e module-email'
-      if: always()
-      uses: MAD-I-T/magento-actions@master
-      env:
-        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
-      with:
-        process: 'unit-test'
-        unit_test_subset_path: 'vendor/magento/module-email/Test/Unit'
+        unit_test_subset_path: 'app/code/aneel/shopfinder/Test/Unit'
         php: 8.1
         composer_version: 2
         opensearch: 1
@@ -102,37 +87,12 @@ jobs:
       with:
         process: 'build'
 
-
-    - name: 'launch security scanner files'
-      if: always()
-      uses: MAD-I-T/magento-actions@master
-      env:
-        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
-      with:
-        process: 'security-scan-files'
-
-
-    - name: 'launch security scanner modules'
-      if: always()
-      uses: MAD-I-T/magento-actions@master
-      env:
-        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
-      with:
-        process: 'security-scan-modules'
-
-    - name: 'mess detector'
-      if: always()
-      uses: MAD-I-T/magento-actions@master
-      with:
-        process: 'mess-detector'
-        md_src_path: 'vendor/magento/module-email'
-
     - name: 'phpstan'
       if: always()
       uses: MAD-I-T/magento-actions@master
       with:
         process: 'phpstan'
-        exec_path: 'vendor/magento/module-email'
+        exec_path: 'app/code/aneel/shopfinder'
 
     - name: 'launch magento2 integration test custom testsuite'
       if: ${{true}}
@@ -142,22 +102,3 @@ jobs:
       with:
         process: 'integration-test'
         testsuite: "Memory Usage Tests"
-
-    - name: 'integration test class'
-      if: ${{true}}
-      uses: MAD-I-T/magento-actions@master
-      env:
-        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
-      with:
-        process: 'integration-test'
-        integration_class: "./testsuite/Magento/MemoryUsageTest.php"
-
-    - name: 'integration test class filter'
-      if: ${{true}}
-      uses: MAD-I-T/magento-actions@master
-      env:
-        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
-      with:
-        process: 'integration-test'
-        integration_class: "./testsuite/Magento/MemoryUsageTest.php"
-        integration_filter: "testAppReinitializationNoMemoryLeak"
