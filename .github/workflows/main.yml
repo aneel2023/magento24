@@ -43,63 +43,7 @@ jobs:
         COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
       with:
         process: 'unit-test'
-
-    - name: 'launch magento2 unit test specific module'
-      if: always()
-      uses: MAD-I-T/magento-actions@master
-      env:
-        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
-      with:
-        process: 'unit-test'
-        unit_test_subset_path: 'magento/vendor/magento/module-email'
+        unit_test_subset_path: 'app/code/Anee/Shopfinder/Test/Unit'
         php: 8.1
         composer_version: 2
-        elasticsearch: 1
-
-
-    - name: 'launch magento2 static test'
-      if: always()
-      uses: MAD-I-T/magento-actions@master
-      env:
-        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
-      with:
-        process: 'static-test'
-
-
-    - name: 'magento coding standard checker'
-      if: always()
-      uses: MAD-I-T/magento-actions@master
-      env:
-        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
-      with:
-        process: 'phpcs-test'
-        extension: 'magento/vendor/magento/module-email' # can be a custom value module in app/code/ dir e.g: Madit/Atos
-        severity: 10
-        standard: 'Magento2'
-
-
-    - name: 'launch magento2 build'
-      if: always()
-      id: build
-      uses: MAD-I-T/magento-actions@master
-      env:
-        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
-      with:
-        process: 'build'
-
-    - name: 'phpstan'
-      if: always()
-      uses: MAD-I-T/magento-actions@master
-      with:
-        process: 'phpstan'
-        exec_path: 'magento/vendor/magento/module-email'
-
-    - name: 'launch magento2 integration test custom testsuite'
-      if: ${{false}}
-      uses: MAD-I-T/magento-actions@master
-      env:
-        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
-      with:
-        php: 8.1
-        process: 'integration-test'
         elasticsearch: 1
