@@ -6,7 +6,6 @@ on: [push]
 jobs:
   magento2-build:
     runs-on: ubuntu-latest
-    container: ubuntu
     name: 'm2 tests & build'
     services:
       mysql:
@@ -22,78 +21,143 @@ jobs:
         ports:
           - 9200:9200
         options: -e="discovery.type=single-node" --health-cmd="curl http://localhost:9200/_cluster/health" --health-interval=10s --health-timeout=5s --health-retries=10
+      #opensearch:
+      #  image: opensearchproject/opensearch:1.2.1
+      #  ports:
+      #    - 9200:9200
+      #  options: -e="discovery.type=single-node" -e "plugins.security.disabled=true"  -e "plugins.security.ssl.http.enabled=false" --health-cmd="curl http://localhost:9200/_cluster/health" --health-interval=10s --health-timeout=5s --health-retries=10
+
     steps:
-      ### Download the third party code in custom dir###
-      - uses: actions/checkout@v3
-        with:
-          path: Madit_Sips2
+    - uses: actions/checkout@v3
 
-      - name: 'install fresh magento repo'
-        uses: MAD-I-T/magento-actions@v3.20
-        env:
-          COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
-        with:
-          process: 'install-magento'
-          magento_version: 2.4.5
-          no_push: 1   ## add this arg to not push to the repo ideal for quick test on specific version
+    - name: 'install fresh magento repo'
+      if: always()
+      #if: ${{false}}
+      uses: MAD-I-T/magento-actions@master
+      env:
+        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
+      with:
+        process: 'create-project'
+        magento_version: 2.4.5
+        #no_push: 1   ## add this arg to not push to the repo ideal for quick test on specific version
 
-      - name: 'launch magento2 unit test'
-        if: always()
-        uses: MAD-I-T/magento-actions@v3.20
-        env:
-          COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
-        with:
-          process: 'unit-test'
-          unit_test_config: 'dev/tests/unit/phpunit.xml.dist'
-          unit_test_subset_path: '../Madit_Sips2/'
+    - name: 'launch magento2 unit test'
+      if: always()
+      uses: MAD-I-T/magento-actions@master
+      env:
+        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
+      with:
+        process: 'unit-test'
 
-      - name: 'phpstan'
-        if: always()
-        uses: MAD-I-T/magento-actions@v3.20
-        with:
-          process: 'phpstan'
-          exec_path: '../Madit_Sips2/'
+    - name: 'launch magento2 unit test filtered by testsuite'
+      if: always()
+      uses: MAD-I-T/magento-actions@master
+      env:
+        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
+      with:
+        process: 'unit-test'
+        testsuite: 'Magento_Unit_Tests_Other'
 
-      - name: 'mess detector'
-        if: always()
-        uses: MAD-I-T/magento-actions@v3.20
-        with:
-          process: 'mess-detector'
-          md_src_path: '../Madit_Sips2/'
 
-      - name: 'Magento coding standard checking'
-        if: always()
-        uses: MAD-I-T/magento-actions@v3.20
-        with:
-          process: 'phpcs-test'
-          extension: 'Madit_Sips2'
-          severity: 10
-          standard: 'Magento2'
-          
-      - name: 'launch magento2 integration test custom testsuite'
-        if: ${{true}}
-        uses: MAD-I-T/magento-actions@master
-        env:
-          COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
-        with:
-          process: 'integration-test'
-          testsuite: "Memory Usage Tests"
+    - name: 'launch magento2 unit test specific module i.e module-email'
+      if: always()
+      uses: MAD-I-T/magento-actions@master
+      env:
+        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
+      with:
+        process: 'unit-test'
+        unit_test_subset_path: 'vendor/magento/module-email/Test/Unit'
+        php: 8.1
+        composer_version: 2
+        opensearch: 1
 
-      - name: 'integration test class'
-        if: ${{true}}
-        uses: MAD-I-T/magento-actions@master
-        env:
-          COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
-        with:
-          process: 'integration-test'
-          integration_class: "./testsuite/Magento/MemoryUsageTest.php"
 
-      - name: 'integration test class filter'
-        if: ${{true}}
-        uses: MAD-I-T/magento-actions@master
-        env:
-          COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
-        with:
-          process: 'integration-test'
-          integration_class: "./testsuite/Magento/MemoryUsageTest.php"
-          integration_filter: "testAppReinitializationNoMemoryLeak"
+    - name: 'launch magento2 static test'
+      if: always()
+      uses: MAD-I-T/magento-actions@master
+      env:
+        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
+      with:
+        process: 'static-test'
+
+
+    - name: 'magento coding standard checker'
+      if: always()
+      uses: MAD-I-T/magento-actions@master
+      env:
+        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
+      with:
+        process: 'phpcs-test'
+        extension: 'magento/vendor/magento/module-email' # can be a custom value module in app/code/ dir e.g: Madit/Atos
+        severity: 10
+        standard: 'Magento2'
+
+
+    - name: 'launch magento2 build'
+      if: always()
+      id: build
+      uses: MAD-I-T/magento-actions@master
+      env:
+        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
+      with:
+        process: 'build'
+
+
+    - name: 'launch security scanner files'
+      if: always()
+      uses: MAD-I-T/magento-actions@master
+      env:
+        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
+      with:
+        process: 'security-scan-files'
+
+
+    - name: 'launch security scanner modules'
+      if: always()
+      uses: MAD-I-T/magento-actions@master
+      env:
+        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
+      with:
+        process: 'security-scan-modules'
+
+    - name: 'mess detector'
+      if: always()
+      uses: MAD-I-T/magento-actions@master
+      with:
+        process: 'mess-detector'
+        md_src_path: 'vendor/magento/module-email'
+
+    - name: 'phpstan'
+      if: always()
+      uses: MAD-I-T/magento-actions@master
+      with:
+        process: 'phpstan'
+        exec_path: 'vendor/magento/module-email'
+
+    - name: 'launch magento2 integration test custom testsuite'
+      if: ${{true}}
+      uses: MAD-I-T/magento-actions@master
+      env:
+        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
+      with:
+        process: 'integration-test'
+        testsuite: "Memory Usage Tests"
+
+    - name: 'integration test class'
+      if: ${{true}}
+      uses: MAD-I-T/magento-actions@master
+      env:
+        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
+      with:
+        process: 'integration-test'
+        integration_class: "./testsuite/Magento/MemoryUsageTest.php"
+
+    - name: 'integration test class filter'
+      if: ${{true}}
+      uses: MAD-I-T/magento-actions@master
+      env:
+        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
+      with:
+        process: 'integration-test'
+        integration_class: "./testsuite/Magento/MemoryUsageTest.php"
+        integration_filter: "testAppReinitializationNoMemoryLeak"
