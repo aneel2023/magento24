@@ -2,7 +2,7 @@
     rev: 2.0.1  # Use the ref you want to point at
     hooks:
     -   id: magento-phpcs
-        args: ["--php=php8.1", "--autofix"]
+        args: ["--php=php8.1"]
     #-   id: magento-phpmd
     -   id: magento-phpunit
         args: ["--php=php8.1"]

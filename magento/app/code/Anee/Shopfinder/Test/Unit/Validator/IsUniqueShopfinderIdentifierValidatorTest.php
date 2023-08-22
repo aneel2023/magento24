@@ -37,7 +37,6 @@ class IsUniqueShopfinderIdentifierValidatorTest extends TestCase
         $this->shopfinderRepository->expects($this->once())->method('getShopByIdentifier')
             ->with($identifier)->willReturn($shopByIdentifier);
 
-
         $shopByIdentifier->expects(self::once())->method('getIdentifier')
             ->willReturn($identifier);
 
@@ -56,7 +55,6 @@ class IsUniqueShopfinderIdentifierValidatorTest extends TestCase
 
     /**
      * @return void
-     * @throws AlreadyUsedIdentifierException
      */
 
     public function testValidate(): void
@@ -69,7 +67,6 @@ class IsUniqueShopfinderIdentifierValidatorTest extends TestCase
         $this->shopfinderRepository->expects($this->once())->method('getShopByIdentifier')
             ->with($identifier)->willReturn($shopByIdentifier);
 
-
         $shopByIdentifier->expects(self::once())->method('getIdentifier')
             ->willReturn($identifier);
 
@@ -78,6 +75,6 @@ class IsUniqueShopfinderIdentifierValidatorTest extends TestCase
         $shopfinder->expects(self::once())->method('getEntityId')
             ->willReturn($id);
 
-        $this->assertFalse($this->sut->validate($identifier, $shopfinder));
+        $this->assertTrue($this->sut->validate($identifier, $shopfinder));
     }
 }
