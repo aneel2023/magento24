@@ -56,6 +56,7 @@ class IsUniqueShopfinderIdentifierValidatorTest extends TestCase
 
     /**
      * @return void
+     * @throws AlreadyUsedIdentifierException
      */
 
     public function testValidate(): void
