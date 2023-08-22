@@ -6,7 +6,7 @@ repos:
         args: ["--php=php8.1"]
     -   id: magento-phpmd
         #args: ["filenames=magento/app/code/Anee/Shopfinder/Service/UpdateShopfinderShopDataService.php"]
-        files: 'magento/app/code/Anee//.*(php)$'
+        files: 'magento/app/code/Anee/.*$'
     -   id: magento-phpstan
     -   id: magento-phpunit
         args: ["--php=php8.1"]
