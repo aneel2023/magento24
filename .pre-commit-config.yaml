@@ -1,9 +1,8 @@
 -   repo: https://github.com/aneel2023/magento2-pre-hooks
-    rev: 1.0.9  # Use the ref you want to point at
+    rev: 2.0.1  # Use the ref you want to point at
     hooks:
     -   id: magento-phpcs
         args: ["--php=php8.1", "--autofix"]
-    -   id: magento-phpmd
-    #-   id: magento-phpunit
-    #    args: ["--php=php8.1"]
-    #    verbose: true
+    #-   id: magento-phpmd
+    -   id: magento-phpunit
+        args: ["--php=php8.1"]
