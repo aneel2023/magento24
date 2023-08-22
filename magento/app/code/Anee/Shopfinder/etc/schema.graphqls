@@ -1,0 +1,52 @@
+type Query {
+    GetShopByIdentifier (
+        identifier: String! @doc(description: "Idnetifier for the shop")
+    ): Shopfinder @resolver(class: "Anee\\Shopfinder\\GraphQl\\Resolver\\ShopfinderResolver") @doc(description:"Get Shop By Identifier")
+    GetShopfinderShopList : [ShopfinderShopList] @resolver(class: "Anee\\Shopfinder\\GraphQl\\Resolver\\GetShopfinderShopListResolver") @doc(description:"List of all shops")
+    DeleteShopByIdentifier (
+            identifier: String! @doc(description: "Idnetifier for the shop")
+    ): DeleteShopResponse @resolver(class: "Anee\\Shopfinder\\GraphQl\\Resolver\\DeleteShopfinderResolver") @doc(description:"Delete Shop By Identifier")
+}
+
+type Mutation {
+    UpdateShopfinderShop(
+        id: Int!
+        name: String!
+        identifier: String!
+        country: String!
+        image: String,
+        longitude: String,
+        latitude: String
+    ): Shopfinder
+    @resolver(class: "Anee\\Shopfinder\\GraphQl\\Resolver\\UpdateShopfinderShopResolver")
+
+}
+type ShopfinderShopList {
+     id: Int!,
+     name: String!,
+     identifier: String!,
+     country: String!,
+     image: String,
+     longitude: String,
+     latitude: String,
+     createdAt: String!,
+     updatedAt: String!
+}
+
+type Shopfinder {
+     id: Int!,
+     name: String!,
+     identifier: String!,
+     country: String!,
+     image: String,
+     longitude: String,
+     latitude: String,
+     createdAt: String!,
+     updatedAt: String!
+}
+
+type DeleteShopResponse {
+     identifier: String!,
+     status: Boolean!,
+     message: String!
+}

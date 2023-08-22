@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table comment="Shop Finder Table" engine="innodb" name="anee_shopfinder"
+           resource="default">
+        <column xsi:type="smallint" name="entity_id" unsigned="false" nullable="false" identity="true"
+                comment="Shop Id"/>
+        <constraint referenceId="PRIMARY" xsi:type="primary">
+            <column name="entity_id"/>
+        </constraint>
+        <column xsi:type="varchar" name="name" nullable="false" length="255" comment="Shop Name"/>
+        <column xsi:type="varchar" name="identifier" nullable="false" length="255" comment="Shop String Identifier"/>
+        <column xsi:type="varchar" name="country" nullable="false" length="3" comment="Country Id"/>
+        <column name="image" nullable="true" xsi:type="text"/>
+        <column name="created_at" nullable="true" xsi:type="timestamp" default="CURRENT_TIMESTAMP" on_update="false"/>
+        <column name="updated_at" nullable="true" xsi:type="timestamp" default="CURRENT_TIMESTAMP" on_update="true"/>
+        <column xsi:type="varchar" name="longitude" nullable="true" length="255" comment="Longitude"/>
+        <column xsi:type="varchar" name="latitude" nullable="true" length="255" comment="Latitude"/>
+        <index referenceId="ANEE_SHOPFINDER_IDENTIFIER" indexType="btree">
+            <column name="identifier"/>
+        </index>
+        <index referenceId="ANEE_SHOPFINDER_NAME_IDENTIFIER" indexType="fulltext">
+            <column name="name"/>
+            <column name="identifier"/>
+        </index>
+    </table>
+</schema>

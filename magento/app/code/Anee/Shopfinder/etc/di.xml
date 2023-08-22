@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Anee. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Anee\Shopfinder\Api\Data\ShopfinderSearchResultsInterface"
+                type="Magento\Framework\Api\SearchResults" />
+    <preference for="Anee\Shopfinder\Api\Data\ShopfinderInterface" type="Anee\Shopfinder\Model\Shopfinder" />
+    <preference for="Anee\Shopfinder\Api\ShopfinderRepositoryInterface" type="Anee\Shopfinder\Model\ShopfinderRepository" />
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="shopfinder_listing_grid_data_source" xsi:type="string">
+                    Anee\Shopfinder\Model\ResourceModel\Shopfinder\Grid\Collection
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Anee\Shopfinder\Model\ResourceModel\Shopfinder\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">anee_shopfinder</argument>
+            <argument name="eventPrefix" xsi:type="string">shopfinder_shopfinder_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">shopfinder_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Anee\Shopfinder\Model\ResourceModel\Shopfinder</argument>
+        </arguments>
+    </type>
+    <virtualType name="Anee\Shopfinder\Service\ImageUploaderService">
+        <arguments>
+            <argument name="baseTmpPath" xsi:type="string">shopfinder/tmp/images</argument>
+            <argument name="basePath" xsi:type="string">shopfinder/images</argument>
+            <argument name="allowedExtensions" xsi:type="array">
+                <item name="jpg" xsi:type="string">jpg</item>
+                <item name="jpeg" xsi:type="string">jpeg</item>
+                <item name="gif" xsi:type="string">gif</item>
+                <item name="png" xsi:type="string">png</item>
+            </argument>
+            <argument name="allowedMimeTypes" xsi:type="array">
+                <item name="jpg" xsi:type="string">image/jpg</item>
+                <item name="jpeg" xsi:type="string">image/jpeg</item>
+                <item name="gif" xsi:type="string">image/gif</item>
+                <item name="png" xsi:type="string">image/png</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\EntityManager\MetadataPool">
+        <arguments>
+            <argument name="metadata" xsi:type="array">
+                <item name="Anee\Shopfinder\Api\Data\ShopfinderInterface" xsi:type="array">
+                    <item name="entityTableName" xsi:type="string">anee_shopfinder</item>
+                    <item name="identifierField" xsi:type="string">entity_id</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+</config>

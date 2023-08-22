@@ -1,0 +1,22 @@
+{
+    "anee_shopfinder": {
+        "column": {
+            "entity_id": true,
+            "name": true,
+            "identifier": true,
+            "country": true,
+            "image": true,
+            "created_at": true,
+            "updated_at": true,
+            "longitude": true,
+            "latitude": true
+        },
+        "index": {
+            "ANEE_SHOPFINDER_NAME_IDENTIFIER": true,
+            "ANEE_SHOPFINDER_IDENTIFIER": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}
