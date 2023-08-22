@@ -1,0 +1,9 @@
+-   repo: https://github.com/aneel2023/magento24
+    rev: 1.0.8  # Use the ref you want to point at
+    hooks:
+    -   id: magento-phpcs
+        args: ["--php=php8.1", "--autofix"]
+    #-   id: magento-phpmd
+    #-   id: magento-phpunit
+    #    args: ["--php=php8.1"]
+    #    verbose: true
