@@ -1,10 +1,10 @@
 repos:
 -   repo: https://github.com/aneel2023/magento2-pre-hooks
-    rev: 2.0.5  # Use the ref you want to point at
+    rev: 2.0.6  # Use the ref you want to point at
     hooks:
     -   id: magento-phpcs
         args: ["--php=php8.1"]
-    -   id: magento-phpstan
+    -   id: magento-phpmd
         #args: ["--php=php8.1","filenames=magento/app/code/Anee/Shopfinder/Service/UpdateShopfinderShopDataService.php"]
     -   id: magento-phpstan
     -   id: magento-phpunit
