@@ -43,4 +43,3 @@ jobs:
         COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
       with:
         process: 'unit-test'
-        exec_path: 'app/code/Magento'
