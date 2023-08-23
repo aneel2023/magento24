@@ -10,7 +10,7 @@
          colors="true"
          columns="max"
          beStrictAboutTestsThatDoNotTestAnything="false"
-         bootstrap="./framework/bootstrap.php">
+         bootstrap="dev/tests/unit/framework/bootstrap.php">
     <coverage>
         <include>
             <directory suffix=".php">app/code/*</directory>
