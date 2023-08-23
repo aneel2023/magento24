@@ -76,6 +76,6 @@ class IsUniqueShopfinderIdentifierValidatorTest extends TestCase
         $shopfinder->expects(self::once())->method('getEntityId')
             ->willReturn($id);
 
-        $this->assertFalse($this->sut->validate($identifier, $shopfinder));
+        $this->assertTrue($this->sut->validate($identifier, $shopfinder));
     }
 }

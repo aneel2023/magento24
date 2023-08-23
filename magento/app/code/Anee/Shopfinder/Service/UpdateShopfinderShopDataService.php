@@ -43,11 +43,7 @@ class UpdateShopfinderShopDataService
     public function execute(
         ShopfinderInterface $shopfinder,
         UpdateShopfinderShopData $data
-    ):
-
-    ShopfinderInterface
-    {
-
+    ): ShopfinderInterface {
         $country = $this->countryFactory->create()->loadByCode($data->getCountry());
         if (empty($country->getName())) {
             throw new UpdateShopfinderDataException(
