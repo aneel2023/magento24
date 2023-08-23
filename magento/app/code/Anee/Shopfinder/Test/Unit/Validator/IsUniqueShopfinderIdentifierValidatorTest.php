@@ -55,6 +55,7 @@ class IsUniqueShopfinderIdentifierValidatorTest extends TestCase
 
     /**
      * @return void
+     * @throws AlreadyUsedIdentifierException
      */
 
     public function testValidate(): void
@@ -75,6 +76,6 @@ class IsUniqueShopfinderIdentifierValidatorTest extends TestCase
         $shopfinder->expects(self::once())->method('getEntityId')
             ->willReturn($id);
 
-        $this->assertTrue($this->sut->validate($identifier, $shopfinder));
+        $this->assertFalse($this->sut->validate($identifier, $shopfinder));
     }
 }
