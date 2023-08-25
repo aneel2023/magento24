@@ -44,5 +44,5 @@ jobs:
       with:
         process: 'unit-test'
         override_settings: true
-        unit_test_config: 'phpunit.xml'
+        unit_test_config: '/github/workspace/magento/phpunit.xml'
         #unit_test_subset_path: '../magento/app/code/*/*/Test/Unit'
