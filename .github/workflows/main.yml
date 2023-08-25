@@ -24,8 +24,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-      with:
-        submodules: recursive
 
     - name: 'install fresh magento repo'
       if: always()
@@ -48,3 +46,11 @@ jobs:
         override-settings: true
         #unit_test_config: '../../magento/phpunit.xml'
         #unit_test_subset_path: '../magento/app/code/*/*/Test/Unit'
+
+    - name: 'this step will build an magento artifact'
+      if: always()
+      uses: MAD-I-T/magento-actions@v3.24
+      env:
+        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
+      with:
+        process: 'build'

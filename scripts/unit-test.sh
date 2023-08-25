@@ -1,29 +1,60 @@
 #!/usr/bin/env bash
 
-#set -e
-
 PROJECT_PATH="$(pwd)"
 
-cd $PROJECT_PATH/magento
+echo "currently in $PROJECT_PATH"
 
-/usr/local/bin/composer install --prefer-dist --no-progress
-chmod +x bin/magento
+cd "$PROJECT_PATH/magento"
+
+/usr/local/bin/composer install --dry-run --prefer-dist --no-progress &> /dev/null
+
+COMPOSER_COMPATIBILITY=$?
+
+echo "Composer compatibility: $COMPOSER_COMPATIBILITY"
 
 
-if [ $INPUT_ELASTICSUITE = 1 ]
+set -e
+
+if [ $COMPOSER_COMPATIBILITY = 0 ]
 then
-  bin/magento setup:install --admin-firstname="local" --admin-lastname="local" --admin-email="local@local.com" --admin-user="local" --admin-password="local123" --base-url="http://magento.build/" --backend-frontname="admin" --db-host="mysql" --db-name="magento" --db-user="root" --db-password="magento" --use-secure=0 --use-rewrites=1 --use-secure-admin=0 --session-save="db" --currency="EUR" --language="en_US" --timezone="Europe/Rome" --cleanup-database --skip-db-validation --es-hosts="elasticsearch:9200" --es-user="" --es-pass=""
-elif [ $INPUT_ELASTICSEARCH = 1 ]
-then
-  bin/magento setup:install --admin-firstname="local" --admin-lastname="local" --admin-email="local@local.com" --admin-user="local" --admin-password="local123" --base-url="http://magento.build/" --backend-frontname="admin" --db-host="mysql" --db-name="magento" --db-user="root" --db-password="magento" --use-secure=0 --use-rewrites=1 --use-secure-admin=0 --session-save="db" --currency="EUR" --language="en_US" --timezone="Europe/Rome" --cleanup-database --skip-db-validation --elasticsearch-host="elasticsearch" --elasticsearch-port=9200
+	/usr/local/bin/composer install --prefer-dist --no-progress
 else
-  bin/magento setup:install --admin-firstname="local" --admin-lastname="local" --admin-email="local@local.com" --admin-user="local" --admin-password="local123" --base-url="http://magento.build/" --backend-frontname="admin" --db-host="mysql" --db-name="magento" --db-user="root" --db-password="magento" --use-secure=0 --use-rewrites=1 --use-secure-admin=0 --session-save="db" --currency="EUR" --language="en_US" --timezone="Europe/Rome" --cleanup-database --skip-db-validation
+  echo "using composer v1"
+  php7.2 /usr/local/bin/composer self-update --1
+	/usr/local/bin/composer install --prefer-dist --no-progress
 fi
 
-bin/magento deploy:mode:set developer
+chmod +x bin/magento
 
-echo "Staring Unit Test"
+## fix magento error: connection default is not defined
+echo "<?php  return ['db' => [ 'table_prefix' => '', 'connection' => [ 'default' => [ 'host' => 'mysql', 'dbname' => 'magento', 'username' => 'root', 'password' => 'magento', 'model' => 'mysql4', 'engine' => 'innodb', 'initStatements' => 'SET NAMES utf8;', 'active' => '1' ] ]]];" > app/etc/env.php
+## end fix ##
+
+if [ -n "$INPUT_DISABLE_MODULES"  ]
+then
+  echo "These modules will be discarded during install process $INPUT_DISABLE_MODULES"
+  [ -f app/etc/config.php ] && cp app/etc/config.php app/etc/config.php.orig
+fi
+
+bash /opt/config/utils/pagebuilder-compatibility-checker.sh
+bash /opt/config/utils/common-magento-installer.sh
+source /etc/environment
+
+# copy allure config if m2 >= 2.4.6
+if [ "$INPUT_OPENSEARCH" = "1" ]
+then
+  echo "copying allure config from $PROJECT_PATH/magento/dev/tests/unit/allure/"
+  ALLURE_PATH="$PROJECT_PATH/magento/dev/tests/unit/allure"
+  cp -r $ALLURE_PATH .
+fi
+
+echo "Now running unit tests ### "
 
 ./vendor/bin/phpunit -c ./phpunit.xml ./app/code/*/*/Test/Unit
 
-echo "exit-code is $? - ${EXIT_CODE}"
+
+if [ -n "$INPUT_DISABLE_MODULES"  ]
+then
+  [ -f app/etc/config.php.orig ] && cat app/etc/config.php.orig > app/etc/config.php
+fi
+rm app/etc/env.php
