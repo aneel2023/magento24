@@ -22,6 +22,8 @@ fi
 
 bin/magento deploy:mode:set developer
 
-./vendor/bin/phpunit -c ./phpunit.xml
+echo "Staring Unit Test"
+
+./vendor/bin/phpunit -c ./phpunit.xml ./app/code/*/*/Test/Unit
 
 echo "exit-code is $? - ${EXIT_CODE}"
