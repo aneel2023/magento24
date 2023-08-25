@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<ruleset name="Magento Specific Design Rules"
+         xmlns="http://pmd.sf.net/ruleset/1.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd"
+         xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd">
+    <rule name="AllPurposeAction"
+          class="MagentoBuild\MagentoCodeMessDetector\Rule\Design\AllPurposeAction"
+          message= "The class {0} does not restrict processed HTTP methods by implementing a Http*Method name*ActionInterface">
+        <description>
+            <![CDATA[
+Controllers (classes implementing ActionInterface) have to implement marker Http<Method>ActionInterface
+to restrict incoming requests by methods.
+            ]]>
+        </description>
+        <priority>2</priority>
+        <properties />
+        <example>
+            <![CDATA[
+class PostOrder implements ActionInterface
+{
+    public function execute()
+    {
+        //I process GET, POST, PATCH etc. while only intended for POST
+        ...
+        return $response;
+    }
+}
+            ]]>
+        </example>
+    </rule>
+    <rule name="RequestMisuse"
+          class="MagentoBuild\MagentoCodeMessDetector\Rule\Design\RequestMisuse"
+          message= "The class {0} uses request, while not being a part of Presentation layer">
+        <description>
+            <![CDATA[
+Request (RequestInterface) must only be used in classes directly responsible for presentation.
+            ]]>
+        </description>
+        <priority>2</priority>
+        <properties />
+        <example>
+            <![CDATA[
+class OrderProcessor
+{
+    public function __construct(RequestInterface $request) {
+        $this->request = $request;
+    }
+
+    public function place(OrderInterface $order)
+    {
+        //Will not be present if processing a WebAPI request
+        $currentOrderId = $this->request->get('id');
+        ...
+    }
+}
+            ]]>
+        </example>
+    </rule>
+    <rule name="CookieAndSessionMisuse"
+          class="MagentoBuild\MagentoCodeMessDetector\Rule\Design\CookieAndSessionMisuse"
+          message= "The class {0} uses request, sessions or cookies while not being a part of Presentation layer">
+        <description>
+            <![CDATA[
+Sessions and cookies must only be used in classes directly responsible for presentation because Web APIs do not
+rely on cookies and sessions. If you need to get current user use MagentoBuild\Authorization\Model\UserContextInterface
+            ]]>
+        </description>
+        <priority>2</priority>
+        <properties />
+        <example>
+            <![CDATA[
+class OrderProcessor
+{
+    public function __construct(SessionManagerInterface $session) {
+        $this->session = $session;
+    }
+
+    public function place(OrderInterface $order)
+    {
+        //Will not be present if processing a WebAPI request
+        $currentOrder = $this->session->get('current_order');
+        ...
+    }
+}
+            ]]>
+        </example>
+    </rule>
+
+    <rule name="LongParameterList"
+          since="0.1"
+          message="The {0} {1} has {2} parameters. Consider reducing the number of parameters to less than {3}."
+          class="MagentoBuild\MagentoCodeMessDetector\Rule\Design\LongParameterList"
+          externalInfoUrl="https://phpmd.org/rules/codesize.html#excessiveparameterlist">
+        <description>
+            Long parameter lists can indicate that a new object should be created to
+            wrap the numerous parameters.  Basically, try to group the parameters together.
+        </description>
+        <priority>3</priority>
+        <properties>
+            <property name="minimum" description="The parameter count reporting threshold" value="4"/>
+            <property name="only-methods" description="Comma-separated methods for which rule will be applied" value=""/>
+            <property name="except-methods" description="Comma-separated methods for which rule won't applied" value="__construct"/>
+        </properties>
+        <example>
+            <![CDATA[
+class Foo {
+    public function addData(
+        $p0, $p1, $p2, $p3, $p4, $p5,
+        $p5, $p6, $p7, $p8, $p9, $p10) {
+    }
+}
+            ]]>
+        </example>
+
+    </rule>
+
+    <rule name="ConstructorExcessiveParameterList"
+          since="0.1"
+          message="The {0} {1} has {2} parameters. Consider reducing the number of parameters to less than {3}."
+          class="MagentoBuild\MagentoCodeMessDetector\Rule\Design\LongParameterList"
+          externalInfoUrl="https://phpmd.org/rules/codesize.html#excessiveparameterlist">
+        <description>
+            Long parameter lists can indicate that a new object should be created to
+            wrap the numerous parameters.  Basically, try to group the parameters together.
+        </description>
+        <priority>3</priority>
+        <properties>
+            <property name="minimum" description="The parameter count reporting threshold" value="15"/>
+            <property name="only-methods" description="Comma-separated methods for which rule will be applied" value="__construct"/>
+            <property name="except-methods" description="Comma-separated methods for which rule won't applied" value=""/>
+        </properties>
+        <example>
+            <![CDATA[
+class Foo {
+    public function addData(
+        $p0, $p1, $p2, $p3, $p4, $p5,
+        $p5, $p6, $p7, $p8, $p9, $p10) {
+    }
+}
+            ]]>
+        </example>
+
+    </rule>
+</ruleset>

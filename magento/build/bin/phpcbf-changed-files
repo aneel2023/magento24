@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+source "build/bin/config"
+source "build/bin/vcs-changed-files"
+
+PHPCS_BIN=${PHPMD_CS:=build/tools/bin/phpcs}
+PHPCBF_BIN=${PHPCBF_BIN:=build/tools/bin/phpcbf}
+PHPCBF_GIT_PUSH=${PHPCBF_GIT_PUSH:=0}
+
+vcs-changed-files
+
+[[ -z "${CHANGED_FILES}" ]] && echo "no changed files" && exit 0
+
+${PHP_BIN} ${PHPCS_BIN} --config-set installed_paths ../../slevomat/coding-standard,../../magento/magento-coding-standard/,../../phpcompatibility/php-compatibility/
+${PHP_BIN} ${PHPCBF_BIN} --standard=phpcs-ruleset.xml ${CHANGED_FILES} || true
+
+[[ $(${GIT_BIN} status --porcelain --untracked-files=no | wc -l) -eq 0 ]] && echo "no changed files" && exit 0
+
+${GIT_BIN} status --porcelain --untracked-files=no
+
+[[ ${PHPCBF_GIT_PUSH} -eq 0 ]] && echo "not commiting changes" && exit 0
+
+# push needs to happen here because of the early exit above
+printf "ADDING FILES CHANGED_FILES\n"
+${GIT_BIN} add -u
+${GIT_BIN} status
+printf "COMMITING CHANGED_FILES\n"
+${GIT_BIN} commit -m 'PHP Code Style Update'
+${GIT_BIN} status
+printf "PUSH CHANGED_FILES\n"
+${GIT_BIN} push origin ${CI_COMMIT_BRANCH}

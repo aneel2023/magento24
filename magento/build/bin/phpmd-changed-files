@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+source "build/bin/config"
+source "build/bin/vcs-changed-files"
+
+MAGENTO_PHPMD_BIN=${MAGENTO_PHPMD_BIN:=build/tools/bin/magento-phpmd}
+
+vcs-changed-files
+
+[[ -z "${CHANGED_FILES}" ]] && echo "no changed files" && exit 0
+
+PHPMD_DIRS=$(echo ${CHANGED_FILES} | tr ' ' ',')
+printf "PHPMD DIRS/FILES:\n${PHPMD_DIRS}\n"
+
+php ${MAGENTO_PHPMD_BIN} ${PHPMD_DIRS} text phpmd-ruleset.xml --exclude "Test" || true
+php ${MAGENTO_PHPMD_BIN} ${PHPMD_DIRS} html phpmd-ruleset.xml --exclude "Test" --reportfile build/output/phpmd/phpmd.html

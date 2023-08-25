@@ -1,0 +1,168 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Process\Process;
+
+$projectDir = rtrim((string) realpath(__DIR__ . '/../../'), '/');
+
+require_once $projectDir . '/vendor/autoload.php';
+
+/**
+ * Split Array into equally sized chunks
+ *
+ * @param string[] $array
+ * @param int $numberOfGroups
+ * @return string[][]
+ */
+function getGroups(array $array, int $numberOfGroups): array
+{
+    if ($numberOfGroups <= 1) {
+        return [$array];
+    }
+
+    $count = count($array);
+    $groupSize = (int) floor($count / $numberOfGroups);
+    $remain = $count % $numberOfGroups;
+
+    $start = 0;
+
+    $groups = [];
+
+    for ($i = 0; $i < $numberOfGroups; $i++) {
+        $size = $groupSize;
+
+        if ($i < $remain) {
+            $size++;
+        }
+
+        if ($size) {
+            $groups[] = array_slice($array, $start, $size);
+
+            $start += $size;
+        }
+    }
+
+    return $groups;
+}
+
+/**
+ * Collects batch of test classes to run based on number of parallel pipeline tasks and current task index.
+ *
+ * @return string[]
+ */
+function getTests(string $input, int $totalNodes, int $index): array
+{
+    $parts = array_filter(explode("\n", $input), fn (string $test) => str_contains($test, ' - '));
+    $parts = array_map(fn (string $test) => addslashes(
+        explode(
+            '::',
+            trim(str_replace('- ', '', $test))
+        )[0]),
+        $parts
+    );
+    $parts = array_unique(array_filter($parts));
+    $groups = getGroups($parts, $totalNodes);
+
+    return $groups[$index] ?? [];
+}
+
+function measureExecutionTime(callable $proceed): string
+{
+    $startTime = microtime(true);
+
+    $proceed();
+
+    $runtime = microtime(true) - $startTime;
+
+    return sprintf('%02d:%02d:%02d', $runtime / 3600.0, (int) ($runtime / 60.0) % 60, (int) $runtime % 60);
+}
+
+/**
+ * The total number of instances of the job running in parallel.
+ *
+ * @link https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+ */
+$totalNodes = (int) getenv('CI_NODE_TOTAL');
+/**
+ * The index of the job in the job set. Only available if the job uses parallel.
+ *
+ * @link https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+ */
+$nodeIndex = (int) getenv('CI_NODE_INDEX');
+
+$output = new ConsoleOutput();
+$output->writeln("---------- NODE $nodeIndex / $totalNodes ----------");
+
+if ($totalNodes !== 0 && $nodeIndex > $totalNodes || $nodeIndex < 0) {
+    $output->writeln("<error>ERROR: INVALID NODE INDEX: $nodeIndex</error>");
+    exit(1);
+}
+
+$output->writeln('---------- COLLECT TESTS TO RUN & INITIAL SETUP ----------');
+
+/**
+ * Lists PHPunit tests in the following format:
+ *  - TeamViewer\Module\Test\Integration\TestClass::test
+ *  - TeamViewer\Module\Test\Integration\AnotherTestClass::test
+ *  - ...
+ */
+$process = new Process([
+    "$projectDir/vendor/bin/phpunit",
+    "--configuration=$projectDir/phpunit-integration.xml.dist",
+    '--list-tests'
+], timeout: null);
+
+$runtime = measureExecutionTime(static fn () => $process->mustRun());
+$output->writeln("DONE IN $runtime");
+
+/**
+ * CI_NODE_INDEX env contains index of the job starting from 1.
+ * Need to deincrement it to make 0 based.
+ */
+$currentNodeIndex = $nodeIndex > 0 ? $nodeIndex - 1 : 0;
+
+$tests = getTests($process->getOutput(), $totalNodes, $currentNodeIndex);
+
+
+$output->writeln('---------- RUN INTEGRATION TESTS ----------');
+
+$numberOfTests = count($tests);
+if (!$numberOfTests) {
+    $output->writeln('<error>ERROR: NO TESTS TO RUN</error>');
+    exit(1);
+}
+
+$output->writeln("---------- NUMBER OF TEST CLASSES: $numberOfTests ----------");
+
+/**
+ * Run phpunit with a filter:
+ * phpunit --filter 'TestClass|AnotherTestClass|...'
+ */
+$process = new Process([
+    "$projectDir/vendor/bin/phpunit",
+    "--configuration=$projectDir/phpunit-integration.xml.dist",
+    '--debug',
+    '--no-coverage',
+    '--colors=never',
+    '--disable-coverage-ignore',
+    '--filter', implode('|', $tests)
+], timeout: null);
+
+$runtime = measureExecutionTime(function () use ($process, $output): void {
+    $process->start();
+
+    // Make sure we have live data output
+    foreach ($process as $type => $data) {
+        $output->writeln($data);
+    }
+
+    $process->wait();
+});
+
+$output->writeln("DONE IN $runtime");
+
+
+// Exit using PHPUnit's exit code to have the action pass/fail
+exit($process->getExitCode());

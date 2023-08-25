@@ -1,0 +1,18 @@
+diff --git a/vendor/phpmd/phpmd/src/main/php/PHPMD/Renderer/HTMLRenderer.php b/vendor/phpmd/phpmd/src/main/php/PHPMD/Renderer/HTMLRenderer.php
+index 13f2a22..31bd655 100644
+--- a/vendor/phpmd/phpmd/src/main/php/PHPMD/Renderer/HTMLRenderer.php
++++ b/vendor/phpmd/phpmd/src/main/php/PHPMD/Renderer/HTMLRenderer.php
+@@ -486,8 +486,8 @@ class HTMLRenderer extends AbstractRenderer
+      */
+     protected static function highlightFile($path)
+     {
+-        $file = substr(strrchr($path, "/"), 1);
+-        $dir = str_replace($file, null, $path);
++        $file = substr((string) strrchr($path, "/"), 1);
++        $dir = str_replace($file, '', $path);
+
+         return $dir . "<span class='path-basename'>" . $file . '</span>';
+     }
+--
+2.20.1
+

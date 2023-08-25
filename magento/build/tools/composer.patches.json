@@ -1,0 +1,7 @@
+{
+    "patches": {
+        "phpmd/phpmd": {
+            "PHPMD_PHP81_COMPABILITY": "patches/composer/VSTS_59408_PHPMD_PHP81_Compability.patch"
+        }
+    }
+}

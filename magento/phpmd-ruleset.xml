@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<ruleset name="My first PHPMD rule set" xmlns="http://pmd.sf.net/ruleset/1.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd"
+         xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd">
+
+    <description>
+        Magento2 PHP Mess Detector RuleSet
+    </description>
+
+    <rule ref="rulesets/cleancode.xml">
+        <exclude name="BooleanArgumentFlag" />
+        <exclude name="ElseExpression" />
+        <exclude name="StaticAccess"/>
+    </rule>
+
+    <rule ref="rulesets/codesize.xml">
+        <exclude name="CyclomaticComplexity" />
+        <exclude name="ExcessiveParameterList" />
+        <exclude name="NPathComplexity" />
+    </rule>
+
+    <rule ref="rulesets/codesize.xml/NPathComplexity">
+        <properties>
+            <!-- default is 200 -->
+            <property name="minimum" value="300" />
+        </properties>
+    </rule>
+
+    <rule ref="rulesets/codesize.xml/CyclomaticComplexity">
+        <properties>
+            <!--
+               1-10 Structured and well written code that is easily testable.
+               10-20 Fairly complex code that could be a challenge to test.
+               20-40 Very complex code that is hard to test.
+               >40 Crazy code
+
+               Default is 10.
+             -->
+            <property name="reportLevel" value="15" />
+        </properties>
+    </rule>
+
+
+    <rule ref="rulesets/controversial.xml" />
+
+    <rule ref="rulesets/design.xml">
+        <exclude name="CouplingBetweenObjects" />
+        <exclude name="DepthOfInheritance" />
+    </rule>
+
+    <rule ref="rulesets/design.xml/DepthOfInheritance">
+        <properties>
+            <!-- Magento default value -->
+            <property name="minimum" value="8" />
+        </properties>
+    </rule>
+    <rule ref="rulesets/design.xml/CouplingBetweenObjects">
+        <priority>1</priority>
+        <properties>
+            <property name="maximum" value="20" />
+        </properties>
+    </rule>
+
+    <rule ref="rulesets/naming.xml">
+        <exclude name="ShortVariable" />
+        <exclude name="LongClassName" />
+        <exclude name="LongVariable" />
+    </rule>
+
+    <rule ref="rulesets/naming.xml/LongVariable">
+        <properties>
+            <property name="maximum" value="40"/>
+            <property name="subtract-suffixes" value="Repository,Service,Command,Query,Extractor,Mapper,Data,Block,ActionInterface,WebApiInterface,Interface,Exception"/>
+        </properties>
+    </rule>
+    <rule ref="rulesets/naming.xml/LongClassName">
+        <properties>
+            <property name="maximum" value="50"/>
+            <property name="subtract-suffixes" value="Repository,RepositoryInterface,Service,ServiceInterface,Command,Query,Extractor,ExtractorInterface,Mapper,MapperInterface,Data,Block,ActionInterface,WebApiInterface,Resolver,DataProvider,DataProviderInterface,Provider,ProviderInterface,Interface,Exception"/>
+        </properties>
+    </rule>
+
+    <rule ref="rulesets/unusedcode.xml" />
+
+    <!-- Magento Specific Rules -->
+    <rule ref="build/tools/src/MagentoBuild/MagentoCodeMessDetector/src/resources/rulesets/design.xml" />
+</ruleset>

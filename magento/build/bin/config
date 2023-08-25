@@ -1,0 +1,26 @@
+PHP_BIN=${PHP_BIN:=php}
+GIT_BIN=${GIT_BIN:=git}
+TAR_BIN=${TAR_BIN:='/bin/tar'}
+PHPMD_BIN=${PHPMD_BIN:=build/tools/bin/phpmd}
+PHPCPD_BIN=${PHPCPD_BIN:=build/tools/bin/phpcpd}
+PHPCS_BIN=${PHPCS_BIN:=build/tools/bin/phpcs}
+PHPCBF_BIN=${PHPCBF_BIN:=build/tools/bin/phpcbf}
+APP_DB_HOST=${APP_DB_HOST:=mysql}
+APP_DB_USER=${APP_DB_USER:=root}
+APP_DB_PASS=${APP_DB_PASS:=root}
+APP_DB1_NAME=${APP_DB1_NAME:=db01}
+APP_DB2_NAME=${APP_DB2_NAME:=db02}
+PROJECT_ROOT=${CI_PROJECT_DIR:=${PWD}}
+CI_COMMIT_BRANCH=${CI_COMMIT_BRANCH:=${CI_COMMIT_BRANCH}}
+PHPCBF_GIT_PUSH=${PHPCBF_GIT_PUSH:=0}
+
+SOURCE_DIRS="src/TeamViewer,src/CommerceLink,app/code/TeamViewer,app/code/CommerceLink" # comma seperated list of dirs to scan
+SOURCE_DIR_LIST="src/TeamViewer src/CommerceLink app/code/TeamViewer app/code/CommerceLink" # space seperated list of dirs to scan
+SOURCE_INCLUDE_LIST="src/TeamViewer/|src/CommerceLink/|app/code/TeamViewer/|app/code/CommerceLink/" # pipe separated list
+
+FRONTEND_THEME='Teamviewer/base'
+LOCALES_ADMIN="en_US en_GB"
+LOCALES_FRONTEND="en_US en_GB nl_NL fr_BE pt_PT ko_KR ja_JP es_ES pl_PL es_MX it_IT tr_TR ru_RU sv_SE cs_CZ hu_HU de_DE nb_NO da_DK fi_FI fr_CA nl_BE zh_Hans_CN zh_Hant_TW th_TH"
+
+DOCS_THEME_GIT_URL="https://github.com/squidfunk/mkdocs-material.git"
+DOCS_THEME_VERSION="8.2.7"

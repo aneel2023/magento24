@@ -1,0 +1,24 @@
+{
+    "name": "magentobuild/magento-code-mess-detector",
+    "description": "Magento Build Code Mess Detector Rules",
+    "minimum-stability": "stable",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "magentobuild",
+            "email": "email@example.com"
+        }
+    ],
+    "require": {
+        "phpmd/phpmd": "*",
+        "pdepend/pdepend": "*"
+    },
+    "bin": [
+        "src/bin/magento-phpmd"
+    ],
+    "autoload": {
+        "psr-4": {
+            "MagentoBuild\\MagentoCodeMessDetector\\": "src"
+        }
+    }
+}
