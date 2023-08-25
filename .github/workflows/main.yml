@@ -43,6 +43,6 @@ jobs:
         COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
       with:
         process: 'unit-test'
-        override-settings: true
+        override_settings: true
         unit_test_config: './phpunit.xml'
         #unit_test_subset_path: '../magento/app/code/*/*/Test/Unit'
