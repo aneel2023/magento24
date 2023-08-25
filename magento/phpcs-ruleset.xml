@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<ruleset name="TeamViewer">
+    <description>TeamViewer Coding Standard</description>
+
+    <!-- Magento 2 Coding Standard -->
+    <rule ref="Magento2">
+        <exclude name="Magento2.Annotation"/>
+        <exclude name="Magento2.Commenting.ClassPropertyPHPDocFormatting" />
+    </rule>
+    <rule ref="Magento2.SQL.RawQuery">
+        <exclude-pattern>*Aggregator.php</exclude-pattern>
+    </rule>
+    <rule ref="Magento2.Legacy.InstallUpgrade">
+        <exclude-pattern>app/code/TeamViewer/Catalog/Setup/*</exclude-pattern>
+    </rule>
+    <rule ref="Magento2.Functions.DiscouragedFunction">
+        <exclude-pattern>src/*</exclude-pattern>
+    </rule>
+
+    <rule ref="PSR12">
+        <exclude name="PSR12.Files.FileHeader.IncorrectOrder" />
+        <exclude name="PSR12.Files.FileHeader.SpacingAfterBlock" />
+
+        <!-- exclude spacing after open brace since it results in wrong if structure for multiline ifs -->
+        <exclude name="PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace" />
+    </rule>
+
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="140" />
+            <property name="absoluteLineLimit" value="140" />
+        </properties>
+    </rule>
+    <exclude name="Generic.Files.LineLength.TooLong" />
+
+    <!-- Strict Coding Standard -->
+    <!-- disable as it colides with psr-12    -->
+    <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
+        <properties>
+            <property name="spacesCountAroundEqualsSign" value="0" />
+            <property name="newlinesCountBetweenOpenTagAndDeclare" value="1" />
+            <property name="linesCountBeforeDeclare" value="0" />
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Classes.ClassStructure">
+        <exclude-pattern>*Test.php</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.ControlStructures.AssignmentInCondition" />
+    <rule ref="SlevomatCodingStandard.ControlStructures.EarlyExit" />
+    <rule ref="SlevomatCodingStandard.Functions.StaticClosure" />
+    <rule ref="SlevomatCodingStandard.Operators.DisallowEqualOperators" />
+    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses">
+        <properties>
+            <property name="searchAnnotations" value="1" />
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Namespaces.UseFromSameNamespace" />
+    <rule ref="SlevomatCodingStandard.PHP.UselessSemicolon" />
+    <rule ref="SlevomatCodingStandard.Variables.UnusedVariable" />
+    <rule ref="SlevomatCodingStandard.Variables.UselessVariable" />
+    <rule ref="SlevomatCodingStandard.Exceptions.DeadCatch" />
+    <rule ref="SlevomatCodingStandard.Classes.ModernClassNameReference" />
+    <rule ref="SlevomatCodingStandard.ControlStructures.DisallowYodaComparison" />
+    <rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses" />
+    <rule ref="SlevomatCodingStandard.PHP.TypeCast" />
+    <!-- disabled as it results in false positives   -->
+    <!--    <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName" />-->
+    <rule ref="SlevomatCodingStandard.Classes.ClassConstantVisibility" />
+    <rule ref="SlevomatCodingStandard.Commenting.InlineDocCommentDeclaration" />
+    <rule ref="SlevomatCodingStandard.Arrays.TrailingArrayComma" />
+    <rule ref="SlevomatCodingStandard.Classes.RequireConstructorPropertyPromotion" />
+</ruleset>

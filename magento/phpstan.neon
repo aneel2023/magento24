@@ -1,0 +1,112 @@
+parameters:
+  level: 8
+  fileExtensions:
+    - php
+    - phtml
+  paths:
+    - app/code/TeamViewer
+    #- src
+  excludePaths:
+    - app/code/CommerceLink
+    - app/code/TeamViewer/Affiliation
+    - app/code/TeamViewer/CartData
+    - app/code/TeamViewer/Catalog
+    - app/code/TeamViewer/Checkout
+    - app/code/TeamViewer/CustomerSections
+    - app/code/TeamViewer/Dynamics
+    - app/code/TeamViewer/DisableRegistration
+    - app/code/TeamViewer/FirebearFix
+    - app/code/TeamViewer/Gdpr
+    - app/code/TeamViewer/Invoice
+    - app/code/TeamViewer/Kount
+    - app/code/TeamViewer/PaymentLink
+    - app/code/TeamViewer/Paypal
+    - app/code/TeamViewer/PriceApi
+    - app/code/TeamViewer/Quotations
+    - app/code/TeamViewer/ScheduledImportExport
+    - app/code/TeamViewer/SEO
+    - app/code/TeamViewer/SepaDirectDebit
+    - app/code/TeamViewer/Setup
+    - app/code/TeamViewer/TaxRates
+    - app/code/TeamViewer/Wirecard
+    - app/code/TeamViewer/WirecardResponseHandler
+    - app/code/TeamViewer/WysiwygDocs
+    - app/code/*/*/Test/*
+    - src/*/*/src/Test/*
+    - '*/_files/*'
+    - '*/_fixtures/*'
+    - '*/registration.php'
+  bootstrapFiles:
+    - dev/tests/unit/framework/bootstrap.php
+    #- vendor/autoload.php
+    #- build/tools/vendor/bitexpert/phpstan-magento/autoload.php
+  ignoreErrors:
+    # @todo this could be removed if extensionInterfaces where generated
+    - '#PHPDoc tag @var for variable .* contains unknown class .*ExtensionInterface#'
+    - '#no value type specified in iterable type array#'
+    - '#Call to method .* on an unknown class .*Extension#'
+    - '#Call to method .* on an unknown class .*ExtensionInterface#'
+    - '#Call to an undefined method .*ExtensibleDataInterface#'
+    - '#Call to an undefined method .*ExtensionInterface#'
+    - '#Call to an undefined method .*Extension#'
+    - "#Parameter .* method .*SearchResultsInterface::setItems\\(\\) expects array<.*ExtensibleDataInterface>, array<int,.*> given#"
+    - "#Parameter .* method .*PublisherInterface::publish\\(\\) expects array\\|object.*#"
+    - "#Parameter .* method .*Collection::addFilter\\(\\) expects string, .* given#"
+    - "#PHPDoc tag @throws with type .*GuzzleException.* is not subtype of Throwable#"
+
+  reportUnmatchedIgnoredErrors: false
+  checkAlwaysTrueInstanceof: true
+  checkFunctionNameCase: true
+  checkMissingIterableValueType: false
+  checkGenericClassInNonGenericObjectType: false
+  checkTooWideReturnTypesInProtectedAndPublicMethods: true
+  checkUninitializedProperties: true
+
+includes:
+  - phpstan-baseline.neon
+  - phpstan-teamviewer.neon
+  - build/tools/vendor/bitexpert/phpstan-magento/extension.neon
+  - build/tools/vendor/phpstan/phpstan/conf/bleedingEdge.neon
+  - build/tools/vendor/phpstan/phpstan-phpunit/extension.neon
+
+services:
+  -
+    class: SlamPhpStan\ClassNotationRule
+    tags:
+      - phpstan.rules.rule
+  -
+    class: SlamPhpStan\GotoRule
+    tags:
+      - phpstan.rules.rule
+  -
+    class: SlamPhpStan\StringToClassRule
+    tags:
+      - phpstan.rules.rule
+  -
+    class: SlamPhpStan\UnusedVariableRule
+    tags:
+      - phpstan.rules.rule
+  -
+    class: SlamPhpStan\MissingClosureParameterTypehintRule
+    tags:
+      - phpstan.rules.rule
+  -
+    class: TheCodingMachine\PHPStan\Rules\Exceptions\ThrowMustBundlePreviousExceptionRule
+    tags:
+      - phpstan.rules.rule
+  -
+    class: TheCodingMachine\PHPStan\Rules\Exceptions\DoNotThrowExceptionBaseClassRule
+    tags:
+      - phpstan.rules.rule
+  -
+    class: Ergebnis\PHPStan\Rules\Classes\PHPUnit\Framework\TestCaseWithSuffixRule
+    tags:
+      - phpstan.rules.rule
+  -
+    class: Ergebnis\PHPStan\Rules\Files\DeclareStrictTypesRule
+    tags:
+      - phpstan.rules.rule
+  -
+    class: Ergebnis\PHPStan\Rules\Expressions\NoEvalRule
+    tags:
+      - phpstan.rules.rule
