@@ -4,33 +4,9 @@ parameters:
     - php
     - phtml
   paths:
-    - app/code/TeamViewer
+    - app/code
     #- src
   excludePaths:
-    - app/code/CommerceLink
-    - app/code/TeamViewer/Affiliation
-    - app/code/TeamViewer/CartData
-    - app/code/TeamViewer/Catalog
-    - app/code/TeamViewer/Checkout
-    - app/code/TeamViewer/CustomerSections
-    - app/code/TeamViewer/Dynamics
-    - app/code/TeamViewer/DisableRegistration
-    - app/code/TeamViewer/FirebearFix
-    - app/code/TeamViewer/Gdpr
-    - app/code/TeamViewer/Invoice
-    - app/code/TeamViewer/Kount
-    - app/code/TeamViewer/PaymentLink
-    - app/code/TeamViewer/Paypal
-    - app/code/TeamViewer/PriceApi
-    - app/code/TeamViewer/Quotations
-    - app/code/TeamViewer/ScheduledImportExport
-    - app/code/TeamViewer/SEO
-    - app/code/TeamViewer/SepaDirectDebit
-    - app/code/TeamViewer/Setup
-    - app/code/TeamViewer/TaxRates
-    - app/code/TeamViewer/Wirecard
-    - app/code/TeamViewer/WirecardResponseHandler
-    - app/code/TeamViewer/WysiwygDocs
     - app/code/*/*/Test/*
     - src/*/*/src/Test/*
     - '*/_files/*'
@@ -64,7 +40,6 @@ parameters:
 
 includes:
   - phpstan-baseline.neon
-  - phpstan-teamviewer.neon
   - build/tools/vendor/bitexpert/phpstan-magento/extension.neon
   - build/tools/vendor/phpstan/phpstan/conf/bleedingEdge.neon
   - build/tools/vendor/phpstan/phpstan-phpunit/extension.neon
