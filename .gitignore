@@ -72,3 +72,4 @@ atlassian*
 /magento/generated/*
 !/magento/generated/.htaccess
 /magento/.DS_Store
+/magento/.idea/*
