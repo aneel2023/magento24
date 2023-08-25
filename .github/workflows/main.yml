@@ -24,6 +24,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        submodules: recursive
 
     - name: 'install fresh magento repo'
       if: always()
@@ -43,5 +45,6 @@ jobs:
         COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
       with:
         process: 'unit-test'
+        override-settings: true
         #unit_test_config: '../../magento/phpunit.xml'
         #unit_test_subset_path: '../magento/app/code/*/*/Test/Unit'
