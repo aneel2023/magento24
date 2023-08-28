@@ -45,4 +45,4 @@ jobs:
       with:
         process: 'unit-test'
         #override_settings: true
-        unit_test_config: 'phpunit.xml'
+        unit_test_config: '~/.composer/phpunit.xml'
