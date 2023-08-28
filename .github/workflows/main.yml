@@ -35,7 +35,7 @@ jobs:
         process: 'create-project'
         magento_version: 2.4.5
         no_push: 1
-        override_settings: 1
+        #override_settings: 1
 
     - name: 'launch magento2 unit test'
       if: always()
@@ -44,5 +44,5 @@ jobs:
         COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
       with:
         process: 'unit-test'
-        #override_settings: true
-        unit_test_config: '~/.composer/phpunit.xml'
+        override_settings: true
+        unit_test_config: 'phpunit.xml'
