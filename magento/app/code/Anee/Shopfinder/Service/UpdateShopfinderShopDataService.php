@@ -1,9 +1,5 @@
 <?php
 declare(strict_types=1);
-
-/**
- * Copyright © Anee. All rights reserved.
- */
 namespace Anee\Shopfinder\Service;
 
 use Anee\Shopfinder\Api\Data\ShopfinderInterface;
@@ -19,7 +15,7 @@ use Magento\Framework\Exception\LocalizedException;
 class UpdateShopfinderShopDataService
 {
     public function __construct(
-        private readonly ShopfinderRepositoryInterface $shopfinderRepository,
+        private readonly ShopfinderRepositoryInterface $shopfinder,
         private readonly CountryFactory $countryFactory,
         private readonly IsUniqueShopfinderIdentifierValidator $shopfinderIdentifierValidator
     ) {
@@ -47,14 +43,16 @@ class UpdateShopfinderShopDataService
             $shopfinder->setImage($data->getImage());
             $shopfinder->setLongitude($data->getLongitude());
             $shopfinder->setLatitude($data->getLatitude());
-            $this->shopfinderRepository->save($shopfinder);
+            $this->shopfinder->save($shopfinder);
         } catch (AlreadyUsedIdentifierException $e) {
             throw new UpdateShopfinderDataException(
-                __($e->getMessage())
+                __($e->getMessage()),
+                $e
             );
         } catch (CouldNotSaveException $exception) {
             throw new UpdateShopfinderDataException(
-                __('Shop was not updated due to error "%1".', $exception->getMessage())
+                __('Shop was not updated due to error "%1".', $exception->getMessage()),
+                $exception
             );
         }
         return $shopfinder;
