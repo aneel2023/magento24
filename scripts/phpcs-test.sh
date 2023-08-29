@@ -12,7 +12,7 @@ fi
 
 cd $PROJECT_PATH/magento-coding-standard
 
-if [ -d "$PROJECT_PATH/magento/build/tools/bin" ]
+if [ -d "$PROJECT_PATH/magento/build/tools" ]
 then
 	echo "PHPCS $PROJECT_PATH/magento/build/tools/bin exists."
 fi
