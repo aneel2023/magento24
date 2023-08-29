@@ -42,5 +42,5 @@ jobs:
       with:
         process: 'phpcs-test'
         override_settings: 1
-        standard: 'Magento2'
+        standard: 'phpcs-ruleset.xml'
         extension: 'Anee'

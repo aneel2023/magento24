@@ -28,11 +28,11 @@ fi
 if [ -d "$PROJECT_PATH/magento/app/code/$INPUT_EXTENSION" ]
 then
 	echo "Extension $PROJECT_PATH/magento/app/code/$INPUT_EXTENSION exists."
-        $PROJECT_PATH/magento/build/tools/bin/phpcs --standard=$INPUT_STANDARD $PROJECT_PATH/magento/app/code/$INPUT_EXTENSION
+        $PROJECT_PATH/magento/build/tools/bin/phpcs --standard=$PROJECT_PATH/magento/$INPUT_STANDARD $PROJECT_PATH/magento/app/code/$INPUT_EXTENSION
 elif [ -d "$PROJECT_PATH/$INPUT_EXTENSION" ]
 then
 	echo "Directory $PROJECT_PATH / $INPUT_EXTENSION exists."
-        $PROJECT_PATH/magento/build/tools/bin/phpcs --standard=$INPUT_STANDARD $PROJECT_PATH/$INPUT_EXTENSION
+        $PROJECT_PATH/magento/build/tools/bin/phpcs --standard=$PROJECT_PATH/magento/$INPUT_STANDARD $PROJECT_PATH/$INPUT_EXTENSION
 else
 	echo "Error: Directory $PROJECT_PATH/magento/app/code/$INPUT_EXTENSION  does not exists."
 	echo "Nor does the Directory $PROJECT_PATH/$INPUT_EXTENSION ."
