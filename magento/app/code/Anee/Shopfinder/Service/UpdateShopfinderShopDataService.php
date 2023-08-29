@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace Anee\Shopfinder\Service;
 
 use Anee\Shopfinder\Api\Data\ShopfinderInterface;
