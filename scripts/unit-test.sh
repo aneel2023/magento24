@@ -10,7 +10,7 @@ cd "$PROJECT_PATH/magento"
 
 COMPOSER_COMPATIBILITY=$?
 
-echo "Composer compatibility: $COMPOSER_COMPATIBILITY"
+echo "Composer compatibilitys: $COMPOSER_COMPATIBILITY"
 
 
 set -e
