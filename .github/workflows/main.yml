@@ -41,4 +41,5 @@ jobs:
         COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
       with:
         process: 'phpcs-test'
+        override_settings: 1
         standard: 'phpcs-ruleset.xml'
