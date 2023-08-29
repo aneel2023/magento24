@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * Copyright © Anee. All rights reserved.
  */
@@ -7,33 +8,21 @@ namespace Anee\Shopfinder\Service;
 
 use Anee\Shopfinder\Api\Data\ShopfinderInterface;
 use Anee\Shopfinder\Api\ShopfinderRepositoryInterface;
+use Anee\Shopfinder\Exception\AlreadyUsedIdentifierException;
+use Anee\Shopfinder\Exception\UpdateShopfinderDataException;
 use Anee\Shopfinder\GraphQl\Data\UpdateShopfinderShopData;
+use Anee\Shopfinder\Validator\IsUniqueShopfinderIdentifierValidator;
+use Magento\Directory\Model\CountryFactory;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
-use Anee\Shopfinder\Exception\UpdateShopfinderDataException;
-use Magento\Directory\Model\CountryFactory;
-use Anee\Shopfinder\Validator\IsUniqueShopfinderIdentifierValidator;
-use Anee\Shopfinder\Exception\AlreadyUsedIdentifierException;
 
 class UpdateShopfinderShopDataService
 {
-    /** @var ShopfinderRepositoryInterface */
-    private $shopfinderRepository;
-
-    /** @var CountryFactory */
-    private $countryFactory;
-
-    /** @var IsUniqueShopfinderIdentifierValidator */
-    private $shopfinderIdentifierValidator;
-
     public function __construct(
-        ShopfinderRepositoryInterface $shopfinderRepository,
-        CountryFactory $countryFactory,
-        IsUniqueShopfinderIdentifierValidator $shopfinderIdentifierValidator
+        private readonly ShopfinderRepositoryInterface $shopfinderRepository,
+        private readonly CountryFactory $countryFactory,
+        private readonly IsUniqueShopfinderIdentifierValidator $shopfinderIdentifierValidator
     ) {
-        $this->shopfinderRepository = $shopfinderRepository;
-        $this->countryFactory = $countryFactory;
-        $this->shopfinderIdentifierValidator = $shopfinderIdentifierValidator;
     }
 
     /**
@@ -43,9 +32,7 @@ class UpdateShopfinderShopDataService
     public function execute(
         ShopfinderInterface $shopfinder,
         UpdateShopfinderShopData $data
-    ):
-
-    ShopfinderInterface {
+    ): ShopfinderInterface {
         $country = $this->countryFactory->create()->loadByCode($data->getCountry());
         if (empty($country->getName())) {
             throw new UpdateShopfinderDataException(

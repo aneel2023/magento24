@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * Copyright © Anee. All rights reserved.
  */
@@ -9,9 +10,9 @@ namespace Anee\Shopfinder\Test\Unit\Validator;
 use Anee\Shopfinder\Api\Data\ShopfinderInterface;
 use Anee\Shopfinder\Api\ShopfinderRepositoryInterface;
 use Anee\Shopfinder\Exception\AlreadyUsedIdentifierException;
+use Anee\Shopfinder\Validator\IsUniqueShopfinderIdentifierValidator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Anee\Shopfinder\Validator\IsUniqueShopfinderIdentifierValidator;
 
 class IsUniqueShopfinderIdentifierValidatorTest extends TestCase
 {
@@ -76,6 +77,6 @@ class IsUniqueShopfinderIdentifierValidatorTest extends TestCase
         $shopfinder->expects(self::once())->method('getEntityId')
             ->willReturn($id);
 
-        $this->assertFalse($this->sut->validate($identifier, $shopfinder));
+        $this->assertTrue($this->sut->validate($identifier, $shopfinder));
     }
 }

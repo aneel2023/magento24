@@ -84,5 +84,5 @@
     <rule ref="rulesets/unusedcode.xml" />
 
     <!-- Magento Specific Rules -->
-    <rule ref="build/tools/src/MagentoBuild/MagentoCodeMessDetector/src/resources/rulesets/design.xml" />
+    <rule ref="./magento/build/tools/src/MagentoBuild/MagentoCodeMessDetector/src/resources/rulesets/design.xml" />
 </ruleset>
