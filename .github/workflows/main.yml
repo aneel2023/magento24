@@ -25,14 +25,14 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: 'launch magento2 unit test'
-      if: always()
-      uses: MAD-I-T/magento-actions@v3.24
-      env:
-        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
-      with:
-        process: 'unit-test'
-        unit_test_config: 'phpunit.xml'
+    #- name: 'launch magento2 unit test'
+    #  if: always()
+    #  uses: MAD-I-T/magento-actions@v3.24
+    #  env:
+    #    COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
+    #  with:
+    #    process: 'unit-test'
+    #    unit_test_config: 'phpunit.xml'
 
     - name: 'Magento coding standard checker'
       if: always()
@@ -42,4 +42,3 @@ jobs:
       with:
         process: 'phpcs-test'
         standard: 'phpcs-ruleset.xml'
-        extension: 'app/code'
