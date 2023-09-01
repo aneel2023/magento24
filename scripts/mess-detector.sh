@@ -36,7 +36,6 @@ then
 	echo "PHPCS $PROJECT_PATH/magento/build/tools exists."
 	cd $PROJECT_PATH/magento/build/tools
 	composer install
-	cd $PROJECT_PATH/magento-coding-standard
 fi
 
 if [ -d "$PROJECT_PATH/magento/build/tools/bin" ]
