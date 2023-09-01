@@ -31,6 +31,14 @@ then
   INPUT_RULESET=ruleset.xml
 fi
 
+if [ -d "$PROJECT_PATH/magento/build/tools" ]
+then
+	echo "PHPCS $PROJECT_PATH/magento/build/tools exists."
+	cd $PROJECT_PATH/magento/build/tools
+	composer install
+	cd $PROJECT_PATH/magento-coding-standard
+fi
+
 if [ -d "$PROJECT_PATH/magento/build/tools/bin" ]
 then
 	echo "PHPMD BIN ###### $PROJECT_PATH/magento/build/tools/bin exists."
