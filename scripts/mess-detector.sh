@@ -2,22 +2,34 @@
 
 PROJECT_PATH="$(pwd)"
 
-if [ -d "$PROJECT_PATH/magento-coding-standard" ]
+echo "currently in $PROJECT_PATH"
+
+cd "$PROJECT_PATH/magento"
+
+
+/usr/local/bin/composer install --dry-run --prefer-dist --no-progress &> /dev/null
+
+COMPOSER_COMPATIBILITY=$?
+
+echo "Composer compatibility: $COMPOSER_COMPATIBILITY"
+
+set -e
+
+if [ $COMPOSER_COMPATIBILITY = 0 ]
 then
-	echo "Directory $PROJECT_PATH/magento-coding-standard already exists."
+	/usr/local/bin/composer install --prefer-dist --no-progress
 else
-	composer create-project magento/magento-coding-standard --stability=dev magento-coding-standard
+  echo "using composer v1"
+  php7.2 /usr/local/bin/composer self-update --1
+	/usr/local/bin/composer install --prefer-dist --no-progress
 fi
 
-
-cd $PROJECT_PATH/magento-coding-standard
-
-if [ -d "$PROJECT_PATH/magento/build/tools" ]
+if [ ! -f $INPUT_RULESET ]
 then
-	echo "PHPMD $PROJECT_PATH/magento/build/tools exists."
-	cd $PROJECT_PATH/magento/build/tools
-	composer install
-	cd $PROJECT_PATH/magento-coding-standard
+  echo -e "\e[32mThe ruleset file [$INPUT_RULESET] NOT FOUND\e[0m"
+  echo "Using default magento ruleset dev/tests/static/testsuite/Magento/Test/Php/_files/phpmd/ruleset.xml"
+  cp /opt/config/defaults/ruleset.xml .
+  INPUT_RULESET=ruleset.xml
 fi
 
 if [ -d "$PROJECT_PATH/magento/build/tools/bin" ]
@@ -25,15 +37,12 @@ then
 	echo "PHPMD BIN ###### $PROJECT_PATH/magento/build/tools/bin exists."
 fi
 
-if [ -d "$PROJECT_PATH/magento/app/code/$INPUT_EXTENSION" ]
+
+if [ -n $INPUT_MD_SRC_PATH ]
 then
-	echo "Extension $PROJECT_PATH/magento/app/code/$INPUT_EXTENSION exists."
-        $PROJECT_PATH/magento/build/tools/bin/phpmd text $PROJECT_PATH/magento/$INPUT_STANDARD $PROJECT_PATH/magento/app/code/$INPUT_EXTENSION
-elif [ -d "$PROJECT_PATH/$INPUT_EXTENSION" ]
-then
-	echo "Directory $PROJECT_PATH / $INPUT_EXTENSION exists."
-        $PROJECT_PATH/magento/build/tools/bin/phpmd text $PROJECT_PATH/magento/$INPUT_STANDARD $PROJECT_PATH/$INPUT_EXTENSION
+  echo -e "\e[32mMess detection initiated\e[0m"
+  php build/tools/bin/phpmd $INPUT_MD_SRC_PATH ansi $INPUT_RULESET
 else
-	echo "Error: Directory $PROJECT_PATH/magento/app/code/$INPUT_EXTENSION  does not exists."
-	echo "Nor does the Directory $PROJECT_PATH/$INPUT_EXTENSION ."
+  echo -e "\e[31mPlease specify the $md_src_path\e[0m"
+  exit 1;
 fi

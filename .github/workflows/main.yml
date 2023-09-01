@@ -53,5 +53,5 @@ jobs:
       with:
         process: 'mess-detector'
         override_settings: 1
-        standard: 'phpmd-ruleset.xml'
-        md_src_path: 'Anee'
+        ruleset: 'phpmd-ruleset.xml'
+        md_src_path: 'app/code/Anee'
