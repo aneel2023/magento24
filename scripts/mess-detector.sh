@@ -46,7 +46,7 @@ fi
 if [ -n $INPUT_MD_SRC_PATH ]
 then
   echo -e "\e[32mMess detection initiated\e[0m"
-  php $PROJECT_PATH/magento/build/tools/bin/phpmd $INPUT_MD_SRC_PATH ansi $PROJECT_PATH/magento/$INPUT_RULESET
+  php $PROJECT_PATH/magento/build/tools/bin/phpmd $PROJECT_PATH/magento/$INPUT_MD_SRC_PATH text $PROJECT_PATH/magento/$INPUT_RULESET
 else
   echo -e "\e[31mPlease specify the $md_src_path\e[0m"
   exit 1;
