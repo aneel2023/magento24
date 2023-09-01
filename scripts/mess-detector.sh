@@ -33,7 +33,7 @@ fi
 
 if [ -d "$PROJECT_PATH/magento/build/tools" ]
 then
-	echo "PHPCS $PROJECT_PATH/magento/build/tools exists."
+	echo "PHPMD $PROJECT_PATH/magento/build/tools exists."
 	cd $PROJECT_PATH/magento/build/tools
 	composer install
 fi

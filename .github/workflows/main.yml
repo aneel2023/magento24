@@ -45,13 +45,23 @@ jobs:
 #        standard: 'phpcs-ruleset.xml'
 #        extension: 'Anee'
 
-    - name: 'mess detector'
+#    - name: 'mess detector'
+#      if: always()
+#      uses: MAD-I-T/magento-actions@v3.24
+#      env:
+#        COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
+#      with:
+#        process: 'mess-detector'
+#        override_settings: 1
+#        ruleset: 'phpmd-ruleset.xml'
+#        md_src_path: 'app/code/Anee'
+
+    - name: 'phpstan'
       if: always()
       uses: MAD-I-T/magento-actions@v3.24
       env:
         COMPOSER_AUTH: ${{secrets.COMPOSER_AUTH}}
       with:
-        process: 'mess-detector'
+        process: 'phpstan'
         override_settings: 1
-        ruleset: 'phpmd-ruleset.xml'
-        md_src_path: 'app/code/Anee'
+        exec_path: 'app/code/Anee'
